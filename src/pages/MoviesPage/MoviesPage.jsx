@@ -1,28 +1,34 @@
-import React, { useState } from 'react'
-import { NavLink, Link, useParams } from "react-router-dom";
-import SearchMovie from '../../components/SearchMovie/SearchMovie';
+import { useEffect, useState } from 'react'
+import { useSearchParams } from "react-router-dom";
+import { fetchSearch } from '../../services/api';
+import SearchMovie from '../../components/SearchMovie/SearchMovie'
+import MovieList from '../../components/MovieList/MovieList';
 
 
 const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
-  const [query, setQuery] = useState('');
-
-  const filtredMovies = movies.filter(movie => movie.title.toLowerCase().includes(query.toLowerCase()));
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const handeChangeQuery = newQuery => {
-    setQuery(newQuery);
+    setSearchParams({query: newQuery})
   }
+
+  const searchQuery = searchParams.get("query")
+
+  useEffect(() => {
+    if (!searchQuery) return
+        const getDeta = async () => {
+          const data = await fetchSearch(searchQuery);
+          setMovies(data.results)
+        };
+
+        getDeta();
+    }, [searchQuery]);
 
   return (
     <div>
       <SearchMovie handeChangeQuery={handeChangeQuery} />
-          <ul>
-        {filtredMovies.map(movie => (
-            <li key={movie.id.toString()}>
-               <p>{movie.title}</p>     
-          </li>
-        ))}
-      </ul>
+      {movies.length > 0 && <MovieList movies={movies} />}
     </div>
   )
 }

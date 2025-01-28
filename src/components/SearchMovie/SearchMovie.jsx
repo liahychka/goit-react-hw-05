@@ -11,6 +11,7 @@ const SearchMovie = ({handeChangeQuery}) => {
         handeChangeQuery(values.query);
     };
 
+  
 
   return (
       <div>

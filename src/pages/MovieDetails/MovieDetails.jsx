@@ -1,11 +1,13 @@
-import React, { Suspense, useEffect, useState } from 'react';
-import { useParams, NavLink, Outlet } from 'react-router-dom';
+import { Suspense, useEffect, useState, useRef } from 'react';
+import { useParams, NavLink, Outlet, Link, useLocation } from 'react-router-dom';
 import { fetchMovieById } from '../../services/api';
 import css from './MovieDetails.module.css';
 
 const MovieDetails = () => {
     const { movieId } = useParams();
     const [movie, setMovie] = useState(null);
+    const location = useLocation();
+    const back = useRef(location?.state ?? "/");
 
     useEffect(() => {
         const getDetails = async () => {
@@ -24,7 +26,7 @@ const MovieDetails = () => {
         <div>
             <div className={css.boxPage}>
             <div className={css.divPosterBtn}>
-            <button className={css.btn} >← Go back</button>
+            <Link className={css.btn} to={back.current} >← Go back</Link>
             {movie && <img className={css.imgPoster} src={movie.poster} alt={movie.title} />} 
             </div>
 

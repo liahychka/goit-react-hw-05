@@ -4,12 +4,23 @@ import { fetchMovie } from '../../services/api';
 
 const Home = () => {
 
-    const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
+
 
   useEffect(() => {
     const getAllMovies = async () => {
-      const data = await fetchMovie();
-      setMovies(data.results);
+      setIsLoading(true);
+      setError(null)
+      try {
+        const data = await fetchMovie();
+        setMovies(data.results); 
+      } catch (error) {
+        setError(error)
+      } finally {
+        setIsLoading(false);
+      }
     };
     getAllMovies();
   }, []);
@@ -17,7 +28,9 @@ const Home = () => {
     return (
       <div>
         <h2>Trending today</h2>
-      <MovieList />      
+        {isLoading && <p>Loading</p>}
+        {error && <p>404</p>}
+        {movies.length > 0 && <MovieList movies={movies} /> }
       </div>
 
   )

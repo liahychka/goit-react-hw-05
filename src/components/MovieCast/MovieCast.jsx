@@ -25,11 +25,10 @@ const MovieCast = () => {
       <>
         <ul className={css.list}>
           {castMovie.map(({ id, name, profile_path, character }) => {
-            if (profile_path) {
               return (
                 <li key={id} className={css.itemPhoto}>
                   <img
-                    src={baseUrl + profile_path}
+                    src={profile_path ? baseUrl + profile_path : null}
                     alt={name}
                     className={css.photo}
                   />
@@ -38,7 +37,7 @@ const MovieCast = () => {
 
                 </li>
               );
-            }
+            
           })}
         </ul>
       </>
